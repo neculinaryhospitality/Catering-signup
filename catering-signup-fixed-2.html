@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catering Event Sign-Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .student-name-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .student-name-section label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .student-name-section input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .student-name-section input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .student-name-section small {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .my-events {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .my-events h2 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .my-event-item {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .my-event-item h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .my-event-item p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .no-events {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .events-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .event-card.full {
+            opacity: 0.7;
+        }
+
+        .event-card.signed-up {
+            border: 2px solid #667eea;
+        }
+
+        .event-title {
+            color: #333;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .event-date {
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .event-details {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .event-details div {
+            margin-bottom: 5px;
+        }
+
+        .spots-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .spots-available {
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .spots-full {
+            font-weight: 600;
+            color: #dc3545;
+        }
+
+        .signups-list {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .signup-btn.sign-up {
+            background: #667eea;
+            color: white;
+        }
+
+        .signup-btn.sign-up:hover {
+            background: #5568d3;
+        }
+
+        .signup-btn.cancel {
+            background: #dc3545;
+            color: white;
+        }
+
+        .signup-btn.cancel:hover {
+            background: #c82333;
+        }
+
+        .signup-btn.full {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .signup-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .error {
+            background: #dc3545;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .refresh-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .event-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ Catering Event Sign-Up</h1>
+            <p>NEMCC Hospitality & Culinary Arts</p>
+        </div>
+
+        <div class="student-name-section">
+            <label for="studentName">Your Name:</label>
+            <input type="text" id="studentName" placeholder="Enter your full name">
+            <small>Enter your name once and it will be remembered on this device</small>
+        </div>
+
+        <button class="refresh-btn" onclick="loadEvents()">🔄 Refresh Events</button>
+
+        <div id="myEvents" class="my-events" style="display: none;">
+            <h2>My Signed Up Events</h2>
+            <div id="myEventsList"></div>
+        </div>
+
+        <div id="loading" class="loading">Loading events...</div>
+        <div id="error" style="display: none;"></div>
+        <div id="eventsList" class="events-list"></div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjVmrEoQxllOmNzsY6Rx-HpatWGTl4GffTM56juxWSIQ518fUt8iT0cvvU5cJorpzK/exec';
+        
+        let studentName = localStorage.getItem('studentName') || '';
+        let events = [];
+
+        document.getElementById('studentName').value = studentName;
+
+        document.getElementById('studentName').addEventListener('change', function() {
+            studentName = this.value.trim();
+            localStorage.setItem('studentName', studentName);
+            updateMyEvents();
+        });
+
+        loadEvents();
+
+        function loadEvents() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            
+            const script = document.createElement('script');
+            script.src = SCRIPT_URL + '?action=getEvents&callback=handleEventsResponse&t=' + Date.now();
+            document.body.appendChild(script);
+        }
+
+        window.handleEventsResponse = function(data) {
+            try {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                events = data.events;
+                renderEvents();
+                updateMyEvents();
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').innerHTML = `
+                    <div class="error">
+                        <strong>Error loading events:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function renderEvents() {
+            const container = document.getElementById('eventsList');
+            
+            if (events.length === 0) {
+                container.innerHTML = '<div class="no-events">No events available at this time.</div>';
+                return;
+            }
+
+            container.innerHTML = events.map((event, index) => {
+                const isSignedUp = event.signups.includes(studentName);
+                const isFull = event.signups.length >= event.maxStudents;
+                const spotsRemaining = event.maxStudents - event.signups.length;
+
+                let buttonHTML;
+                if (!studentName) {
+                    buttonHTML = '<button class="signup-btn full" disabled>Enter your name above to sign up</button>';
+                } else if (isSignedUp) {
+                    buttonHTML = `<button class="signup-btn cancel" onclick="cancelSignup(${index})">Cancel My Sign-Up</button>`;
+                } else if (isFull) {
+                    buttonHTML = '<button class="signup-btn full" disabled>Event Full</button>';
+                } else {
+                    buttonHTML = `<button class="signup-btn sign-up" onclick="signUp(${index})">Sign Up</button>`;
+                }
+
+                return `
+                    <div class="event-card ${isFull ? 'full' : ''} ${isSignedUp ? 'signed-up' : ''}">
+                        <div class="event-title">${event.name}</div>
+                        <div class="event-date">📅 ${event.date}</div>
+                        <div class="event-details">
+                            <div><strong>Event Time:</strong> ${event.eventTime}</div>
+                            <div><strong>Location:</strong> ${event.location}</div>
+                            <div><strong>Prep Time:</strong> ${event.prepTime}</div>
+                            <div><strong>Prep Location:</strong> ${event.prepLocation}</div>
+                        </div>
+                        <div class="spots-info">
+                            <div class="${isFull ? 'spots-full' : 'spots-available'}">
+                                ${isFull ? 'FULL' : `${spotsRemaining} spot${spotsRemaining !== 1 ? 's' : ''} remaining`}
+                            </div>
+                            <div>${event.signups.length}/${event.maxStudents} signed up</div>
+                        </div>
+                        ${event.signups.length > 0 ? `
+                            <div class="signups-list">
+                                <strong>Signed up:</strong> ${event.signups.join(', ')}
+                            </div>
+                        ` : ''}
+                        ${buttonHTML}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateMyEvents() {
+            if (!studentName) {
+                document.getElementById('myEvents').style.display = 'none';
+                return;
+            }
+
+            const myEvents = events.filter(event => event.signups.includes(studentName));
+            
+            if (myEvents.length === 0) {
+                document.getElementById('myEvents').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('myEvents').style.display = 'block';
+            document.getElementById('myEventsList').innerHTML = myEvents.map(event => `
+                <div class="my-event-item">
+                    <h3>${event.name}</h3>
+                    <p>📅 ${String(event.date).split('T')[0]} | ${event.prepTime}</p>
+                    <p>📍 ${event.prepLocation}</p>
+                </div>
+            `).join('');
+        }
+
+        function signUp(eventIndex) {
+            if (!studentName) {
+                alert('Please enter your name first');
+                return;
+            }
+
+            const event = events[eventIndex];
+            
+            if (event.signups.length >= event.maxStudents) {
+                alert('Sorry, this event is already full!');
+                return;
+            }
+
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'signup_frame';
+            document.body.appendChild(iframe);
+
+            const form = document.createElement('form');
+            form.target = 'signup_frame';
+            form.method = 'GET';
+            form.action = SCRIPT_URL;
+
+            const fields = {
+                action: 'signUp',
+                eventId: event.id,
+                studentName: studentName,
+                callback: 'handleSignUpResponse'
+            };
+
+            for (let key in fields) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+            
+            setTimeout(() => {
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+                loadEvents();
+            }, 1000);
+        }
+
+        window.handleSignUpResponse = function(data) {
+            if (data.success) {
+                loadEvents();
+            } else {
+                alert('Error: ' + (data.error || 'Could not sign up'));
+            }
+        }
+
+        function cancelSignup(eventIndex) {
+            if (!studentName) {
+                return;
+            }
+
+            const event = events[eventIndex];
+
+            if (!confirm(`Are you sure you want to cancel your sign-up for "${event.name}"?`)) {
+                return;
+            }
+
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'cancel_frame';
+            document.body.appendChild(iframe);
+
+            const form = document.createElement('form');
+            form.target = 'cancel_frame';
+            form.method = 'GET';
+            form.action = SCRIPT_URL;
+
+            const fields = {
+                action: 'cancelSignup',
+                eventId: event.id,
+                studentName: studentName,
+                callback: 'handleCancelResponse'
+            };
+
+            for (let key in fields) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+            
+            setTimeout(() => {
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+                loadEvents();
+            }, 1000);
+        }
+
+        window.handleCancelResponse = function(data) {
+            if (data.success) {
+                loadEvents();
+            } else {
+                alert('Error: ' + (data.error || 'Could not cancel sign-up'));
+            }
+        }
+    </script>
+</body>
+</html>
